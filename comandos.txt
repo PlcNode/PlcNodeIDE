@@ -1,0 +1,35 @@
+https://micropython.org/download/esp32/
+
+////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////CONFIGURAR ESP COMO PYBOARD///////////////////
+
+pip install Pyserial
+pip install rshell
+
+esptool.py --chip esp32 --port COM6  erase_flash
+esptool.py --chip esp32 --port COM6 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
+
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////ACCEDER AL REPL DEL PLC//////////////////////
+
+rshell -p COM6
+
+repl
+
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////SUBIR ARCHIVO A PLC////////////////////////////////
+
+
+cp plc/index.html /pyboard
+cp plc/manifest.json /pyboard
+cp plc/div.html /pyboard
+cp plc/ssd1306.py /pyboard
+cp plc/microWebSocket.py /pyboard
+cp plc/microWebSrv.py /pyboard
+cp plc/plc.py /pyboard
+cp plc/plcsocket.py /pyboard
+cp plc/plcinterrupt.py /pyboard
+cp plc/plc.json /pyboard
+cp plc/boot.py /pyboard
+
+repl
