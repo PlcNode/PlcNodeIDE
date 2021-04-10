@@ -22,7 +22,6 @@ repl
 
 cp plc/index.html /pyboard
 cp plc/manifest.json /pyboard
-cp plc/div.html /pyboard
 cp plc/ssd1306.py /pyboard
 cp plc/microWebSocket.py /pyboard
 cp plc/microWebSrv.py /pyboard
@@ -31,5 +30,14 @@ cp plc/plcsocket.py /pyboard
 cp plc/plcinterrupt.py /pyboard
 cp plc/plc.json /pyboard
 cp plc/boot.py /pyboard
-
 repl
+import machine
+machine.reset()
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////GITHUB///////////////////////////////////////////////
+
+git add -A
+git commit -m "actualiacion"
+git push origin master

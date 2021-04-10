@@ -1,13 +1,15 @@
 
-import machine
-import ssd1306
-import time
-import network
-import ujson
-import plc
-import plcsocket
-import plcinterrupt
-
+try:
+    import machine
+    import ssd1306
+    import time
+    import network
+    import ujson
+    import plc
+    import plcsocket
+    import plcinterrupt
+except:
+    pass
 #------------------------------------------------------------------------------
 
 data = ujson.loads(str('{"div_debug": ""}'))
@@ -79,36 +81,48 @@ class plcClass:
     def getWifiPassword(self):
         return self.plcJson['wifiPassword']
 
-    def Q0(self,state):
+    def Q0(self,state = -1):
         if ((state == 1) or (state == True)):
             self._Q0.on()
         if ((state == 0) or (state == False)):
             self._Q0.off()
-    def Q1(self,state):
+        return self._Q0.value()
+
+    def Q1(self,state = -1):
         if ((state == 1) or (state == True)):
             self._Q1.on()
         if ((state == 0) or (state == False)):
             self._Q1.off()
-    def Q2(self,state):
+        return self._Q1.value()
+
+    def Q2(self,state = -1):
         if ((state == 1) or (state == True)):
             self._Q2.on()
         if ((state == 0) or (state == False)):
             self._Q2.off()
-    def Q3(self,state):
+        return self._Q2.value()
+
+    def Q3(self,state = -1):
         if ((state == 1) or (state == True)):
             self._Q3.on()
         if ((state == 0) or (state == False)):
             self._Q3.off()
-    def Q4(self,state):
+        return self._Q3.value()
+
+    def Q4(self,state = -1):
         if ((state == 1) or (state == True)):
             self._Q4.on()
         if ((state == 0) or (state == False)):
             self._Q4.off()
-    def Q5(self,state):
+        return self._Q4.value()
+
+    def Q5(self,state = -1):
         if ((state == 1) or (state == True)):
             self._Q5.on()
         if ((state == 0) or (state == False)):
             self._Q5.off()
+        return self._Q5.value()
+
     def I0(self):
         return self._I0.value()
     def I1(self):
@@ -121,6 +135,7 @@ class plcClass:
         return self._I4.value()
     def I5(self):
         return self._I5.value()
+
     def I0Interrupt(self, callback):
         self._I0.irq (trigger=Pin.IRQ_RISING, handler=callback)
     def I1Interrupt(self, callback):
@@ -212,6 +227,43 @@ def _httpHandlerTestGet(httpClient, httpResponse) :
 								  contentCharset = "UTF-8",
 								  content 		 = open("index.html").read() )
 
+@MicroWebSrv.route('/plc.py')
+def _httpHandlerTestGet(httpClient, httpResponse) :
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = open("plc.py").read() )
+
+
+@MicroWebSrv.route('/plcinterrupt.py')
+def _httpHandlerTestGet(httpClient, httpResponse) :
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = open("plcinterrupt.py").read() )
+
+
+@MicroWebSrv.route('/plcsocket.py')
+def _httpHandlerTestGet(httpClient, httpResponse) :
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = open("plcsocket.py").read() )
+
+@MicroWebSrv.route('/div.html')
+def _httpHandlerTestGet(httpClient, httpResponse) :
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = open("div.html").read() )
+
+@MicroWebSrv.route('/plc.json')
+def _httpHandlerTestGet(httpClient, httpResponse) :
+	httpResponse.WriteResponseOk( headers		 = None,
+								  contentType	 = "text/html",
+								  contentCharset = "UTF-8",
+								  content 		 = open("plc.json").read() )
+                    
 
 # ----------------------------------------------------------------------------
 
@@ -225,6 +277,8 @@ def _recvTextCallback(webSocket, msg):
     _plc.socketPayload = msg
     _data = _plc.deserialize(str(msg))
     if(_data['save'] == "True"):
+        _plc.plcJson['updateTime'] = _data['updateTime']
+        _plc.plcJson['autoScroll'] = _data['autoScroll']
         plc_py = open("plc.py","w")
         plc_py.write(_data['plc_py'])
         plc_py.close()
@@ -234,28 +288,28 @@ def _recvTextCallback(webSocket, msg):
         plc_socket_py = open("plcsocket.py","w")
         plc_socket_py.write(_data['plc_socket_py'])
         plc_socket_py.close()
-        div_html = open("div.html","w")
-        div_html.write(_data['div_html'])
-        div_html.close()
         plc_json = open("plc.json", "w")
         plc_json.write(_plc.serialize(_plc.plcJson))
         plc_json.close()
         machine.reset()
-    if(_data['update'] == "True"):
-        _data_ = ujson.loads(str('{"update": "", "updateTime": "", "autoScroll": "", "plc_py": "", "div_html":"", "plc_interrupt_py":"", "plc_socket_py": ""}'))
-        _data_['update'] = "True"
-        _data_['plc_py'] = open("plc.py").read()
-        _data_['div_html'] = open("div.html").read()
-        _data_['plc_interrupt_py'] = open("plcinterrupt.py").read()
-        _data_['plc_socket_py'] = open("plcsocket.py").read()
-        _data_['updateTime'] = _plc.deserialize(open("plc.json").read())['updateTime']
-        _data_['autoScroll'] = _plc.deserialize(open("plc.json").read())['autoScroll']
-        webSocket.SendText("%s" % str(_plc.serialize(_data_)))
-        _data_['update'] = "False"
     if(_data['debug'] == "True"):
-        _data_ = ujson.loads(str('{"debug":"", "div_debug": ""}'))
+        _data_ = ujson.loads(str("""{"debug":"", "div_debug": "", 
+        "I0": "", "I1": "", "I2": "", "I3": "", "I4": "", "I5": "",
+         "Q0": "","Q1": "","Q2": "","Q3": "","Q4": "","Q5": ""}"""))
         _data_['debug'] = "True"
         _data_['div_debug'] = data['div_debug']
+        _data_['I0'] = _plc.I0()
+        _data_['I1'] = _plc.I1()
+        _data_['I2'] = _plc.I2()
+        _data_['I3'] = _plc.I3()
+        _data_['I4'] = _plc.I4()
+        _data_['I5'] = _plc.I5()
+        _data_['Q0'] = _plc.Q0()
+        _data_['Q1'] = _plc.Q1()
+        _data_['Q2'] = _plc.Q2()
+        _data_['Q3'] = _plc.Q3()
+        _data_['Q4'] = _plc.Q4()
+        _data_['Q5'] = _plc.Q5()
         webSocket.SendText("%s" % str(_plc.serialize(_data_)))
 
 def _recvBinaryCallback(webSocket, data):
@@ -266,7 +320,7 @@ def _closedCallback(webSocket):
 
 
 srv = MicroWebSrv(webPath='www/')
-srv.MaxWebSocketRecvLen     = 1024*30
+srv.MaxWebSocketRecvLen     = 1024*10
 srv.WebSocketThreaded		= True
 srv.AcceptWebSocketCallback = _acceptWebSocketCallback
 srv.Start(True)
@@ -275,12 +329,12 @@ srv.Start(True)
 
 try:
     plcinterrupt.interrupts(_plc)
-    _plc.I0Interrupt(interruptI0)
-    _plc.I1Interrupt(interruptI1)
-    _plc.I2Interrupt(interruptI2)
-    _plc.I3Interrupt(interruptI3)
-    _plc.I4Interrupt(interruptI4)
-    _plc.I5Interrupt(interruptI5)
+    _plc.I0Interrupt(plcinterrupt.interrupts.interruptI0)
+    _plc.I1Interrupt(plcinterrupt.interrupts.interruptI1)
+    _plc.I2Interrupt(plcinterrupt.interrupts.interruptI2)
+    _plc.I3Interrupt(plcinterrupt.interrupts.interruptI3)
+    _plc.I4Interrupt(plcinterrupt.interrupts.interruptI4)
+    _plc.I5Interrupt(plcinterrupt.interrupts.interruptI5)
 except:
     _plc.console_log("Error in plc interrupts")
 

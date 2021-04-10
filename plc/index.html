@@ -24,45 +24,81 @@
     <div style="background-color: #000000de;" class="navbar">
         <button id="btn_save" style="background-color: #00aeffde; border-radius: 0.25%;" class="btn btn-warning">save</button>
     </div>
-    <br>
-    <br>
-    <div>
-        <table style="width: 100%; margin: 2%;">       
-            <td style="width: 35%;">
-                <textarea id="plc_py" style="width: 100%; resize: none;" rows="18" spellcheck="false"> </textarea>
-            </td>
-            <td style="width: 35%;">
-                <textarea id="div_debug"  style="width: 100%; resize: none;" rows="18" spellcheck="false"></textarea>
-            </td>
-            <td style="width: 20%;">
-                <input type="checkbox" id="auto_scroll" spellcheck="false">&nbsp;<label>Auto scroll</label>
-                <br>
-                <input type="number" id="update_time" max="30" min="0.2" step="0.1" value="1"> <label>Update Time</label>
-                <br>
-                <button id="btn_apply" class="btn btn-primary">Apply</button>
-            </td>
-        </table> 
-    </div>
-    <div>
-        <table style="width: 100%;  margin: 2%;">  
-             <td style="width: 45%;">
-                 <textarea id="plc_interrupt_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
-             </td>
-             <td style="width: 45%;">
-                <textarea id="plc_socket_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
-             </td>
+        <table style="width: 100%;">
+            <thead style="background-color:#00aeffde; color: white;">
+                <td style="padding: 1%;">Principal Programming</td>
+                <td style="padding: 1%;">Debugger</td>
+                <td style="padding: 1%;">Options</td>
+            </thead>   
+            <tbody>
+                <td style="padding: 1%;">
+                    <textarea id="plc_py" style="width: 100%; resize: none;" rows="18" spellcheck="false"> </textarea>
+                </td>
+                <td style="padding: 1%;">
+                    <textarea id="div_debug"  style="width: 100%; resize: none;" rows="18" spellcheck="false"></textarea>
+                </td>
+                <td>
+                    <input type="checkbox" id="auto_scroll" spellcheck="false"><label>Auto scroll</label>
+                    <br>
+                    <input type="number" id="update_time" max="30" min="0.2" step="0.1" value="1"> <label>Update Time</label>
+                </td>
+            </tbody> 
+        </table>
+        <table style="width: 100%;">
+            <thead style="background-color: #ffae00; color: white;">
+                <td style="padding: 1%;">Socket Programming</td>
+                <td style="padding: 1%;">Send Message</td>
+            </thead>
+            <tbody> 
+                <td style="padding: 1%;">
+                    <textarea id="plc_socket_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
+                </td>
+                <td style="padding: 1%;">
+                    <input type="text" id="text_send_message" placeholder="Message over sockets">
+                    <button id="btn_send_message" class="btn btn-warning">Send message</button>
+                </td>
+            </tbody> 
          </table> 
-     </div>
-    <div>
-       <table style="width: 100%;  margin: 2%;">  
-            <td style="width: 45%;">
-                <textarea id="div_html" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
-            </td>
-            <td style="width: 45%;">
-                <div id="div_area" style="width: 100%; ">Div</div>
-            </td>
-        </table> 
-    </div>
+        <table style="width: 100%;">  
+            <thead style="background-color: #51c424; color: white;">
+                <td style="padding: 1%;">Interupts</td>
+                <td style="padding: 1%;">Inputs</td>
+                <td style="padding: 1%;">Outputs</td>
+            </thead>
+            <tbody> 
+                <td style="padding: 1%;">
+                    <textarea id="plc_interrupt_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
+                </td>
+                <td style="padding: 1%;">
+                    <label>I0:<div id="I0">I0</div></label>
+                    <br>
+                    <label>I1:<div id="I1">I1</div></label>
+                    <br>
+                    <label>I2:<div id="I2">I2</div></label>
+                    <br>
+                    <label>I3:<div id="I3">I3</div></label>
+                    <br>
+                    <label>I4:<div id="I4">I4</div></label>
+                    <br>
+                    <label>I5:<div id="I5">I5</div></label>
+                    <br>
+                </td style="padding: 1%;">
+                <td style="padding: 1%;">
+                    <label>Q0:<div id="Q0">Q0</div></label>
+                    <br>
+                    <label>Q1:<div id="Q1">Q1</div></label>
+                    <br>
+                    <label>Q2:<div id="Q2">Q2</div></label>
+                    <br>
+                    <label>Q3:<div id="Q3">Q3</div></label>
+                    <br>
+                    <label>Q4:<div id="Q4">Q4</div></label>
+                    <br>
+                    <label>Q5:<div id="Q5">Q5</div></label>
+                    <br>
+                </td>
+            </tbody> 
+         </table> 
     
     <script>
 
@@ -71,19 +107,32 @@
         var plc_socket_py = document.getElementById("plc_socket_py")
         var plc_py = document.getElementById("plc_py")
         var div_debug = document.getElementById("div_debug")
-        var div_html = document.getElementById("div_html")
         var div_area = document.getElementById("div_area")
         var btn_save = document.getElementById("btn_save")
         var div_area = document.getElementById("div_area")
         var auto_scroll = document.getElementById("auto_scroll")
-        var upate_time = document.getElementById("upate_time")
-        var btn_apply = document.getElementById("btn_apply")
+        var update_time = document.getElementById("update_time")
+        var text_send_message = document.getElementById("text_send_message")
+        var btn_send_message = document.getElementById("btn_send_message")
+
+        var I0 = document.getElementById("I0")
+        var I1 = document.getElementById("I1")
+        var I2 = document.getElementById("I2")
+        var I3 = document.getElementById("I3")
+        var I4 = document.getElementById("I4")
+        var I5 = document.getElementById("I5")
+
+        var Q0 = document.getElementById("Q0")
+        var Q1 = document.getElementById("Q1")
+        var Q2 = document.getElementById("Q2")
+        var Q3 = document.getElementById("Q3")
+        var Q4 = document.getElementById("Q4")
+        var Q5 = document.getElementById("Q5")
 
         var json = {
             plc_py:"",
             plc_interrupt_py:"",
             plc_socket_py:"",
-            div_html:"",
             div_debug:"",
             save: "",
             update: "",
@@ -92,72 +141,23 @@
             updateTime: "1"
         }
 
-        var connection = new WebSocket('ws://'+location.hostname);
-
-        connection.onopen = function () {
-            json.update = "True"
-            setTimeout(function(){
-                connection.send(JSON.stringify(json))
-                json.update = "False"
-            }, 3000)
-        };
-
-        // Log errors
-        connection.onerror = function (error) {
-        console.log('WebSocket Error ' + error);
-        };
-
-        // Log messages from the server
-        connection.onmessage = function (e) {
-            var data = JSON.parse(e.data);
-            //console.log(data)
-            if(data.debug == "True"){
-                div_debug.innerHTML += data.div_debug + "\n"
-                if(json.autoScroll == "1"){
-                    div_debug.scrollTop = div_debug.scrollHeight;
-                }
-            }
-            if(data.update == "True"){
-
-                plc_py.value = data.plc_py
-                json.plc_py = data.plc_py
-
-                div_html.value = data.div_html
-                div_area.innerHTML = data.div_html 
-
-                json.index_html = data.index_html 
-
-                update_time.value = data.updateTime
-                json.updateTime = data.updateTime
-
-                json.autoScroll = data.autoScroll
-
-                plc_interrupt_py.value = data.plc_interrupt_py
-                json.plc_interrupt_py = data.plc_interrupt_py
-
-                plc_socket_py.value = data.plc_socket_py
-                json.plc_socket_py = data.plc_socket_py
-
-                if(data.autoScroll == "0"){
-                    auto_scroll.checked = false
-                    json.autoScroll = false
-                }
-                if(data.autoScroll == "1"){
-                    auto_scroll.checked = true
-                    json.autoScroll = true
-                }
-            }
-        };
 
         btn_save.addEventListener("click", function(){
-            json.div_html = div_html.value
             json.plc_py = plc_py.value
             json.plc_interrupt_py = plc_interrupt_py.value
             json.plc_socket_py = plc_socket_py.value
+            json.updateTime = update_time.value
             json.save = "True"
             console.log(JSON.stringify(json))
             connection.send(JSON.stringify(json))
             json.save = "False"
+            setTimeout(() => {
+               location.reload(); 
+            }, 5000);
+        });
+
+        btn_send_message.addEventListener("click", function(){
+            connection.send(text_send_message.value)
         });
 
         auto_scroll.addEventListener("change", function(){
@@ -170,22 +170,168 @@
             }
         });
 
-        var interval = setInterval(function(){
-             json.debug = "True"
-             //console.log(JSON.stringify(json))
-             connection.send(JSON.stringify(json))
-             json.debug = "False"
-         }, ((Number(json.updateTime)*1000)));
 
-        btn_apply.addEventListener("click", function(){
-            json.updateTime = upate_time.value
-            clearInterval(interval)
+        plc_py.addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+
+                // set textarea value to: text before caret + tab + text after caret
+                this.value = this.value.substring(0, start) +
+                "\t" + this.value.substring(end);
+
+                // put caret at right position again
+                this.selectionStart =
+                this.selectionEnd = start + 1;
+            }
+        });
+
+        plc_interrupt_py.addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+
+                // set textarea value to: text before caret + tab + text after caret
+                this.value = this.value.substring(0, start) +
+                "\t" + this.value.substring(end);
+
+                // put caret at right position again
+                this.selectionStart =
+                this.selectionEnd = start + 1;
+            }
+        });
+
+        plc_socket_py.addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+
+                // set textarea value to: text before caret + tab + text after caret
+                this.value = this.value.substring(0, start) +
+                "\t" + this.value.substring(end);
+
+                // put caret at right position again
+                this.selectionStart =
+                this.selectionEnd = start + 1;
+            }
+        });
+
+        fetch('http://'+location.hostname+'/plc.py')
+        .then(data => data.text())
+        .then(function(data){
+            console.log(data)
+            json.plc_py = data
+            plc_py.value = data
+        });
+
+        fetch('http://'+location.hostname+'/plcinterrupt.py')
+        .then(data => data.text())
+        .then(function(data){
+            console.log(data)
+            json.plc_interrupt_py = data
+            plc_interrupt_py.value = data
+        });
+
+        fetch('http://'+location.hostname+'/plcsocket.py')
+        .then(data => data.text())
+        .then(function(data){
+            console.log(data)
+            json.plc_socket_py = data
+            plc_socket_py.value = data
+        });
+
+
+        var interval;
+        var interval1;
+
+        interval1 = setInterval(function(){
+            connection = new WebSocket('ws://'+location.hostname);
+        },5000);
+
+        fetch('http://'+location.hostname+'/plc.json')
+        .then(data => data.json())
+        .then(function(data){
+
+            console.log(data)
+            json.updateTime = data.updateTime
+            update_time.value = data.updateTime
+
+            if(data.autoScroll == "0"){
+                auto_scroll.checked = false
+                json.autoScroll = false
+            }
+            if(data.autoScroll == "1"){
+                auto_scroll.checked = true
+                json.autoScroll = true
+            }
+
             interval = setInterval(function(){
                 json.debug = "True"
+                console.log("Sending message to server")
                 connection.send(JSON.stringify(json))
                 json.debug = "False"
-            }, ((Number(json.updateTime))*1000));
+            }, ((Number(data.updateTime)*1000)));
+
         });
+
+
+        var connection;
+
+        connection = new WebSocket('ws://'+location.hostname);
+
+        connection.onopen = function () {
+            console.log(`Open conection websocket with ${location.hostname}`);
+            clearInterval(interval1);
+        };
+
+            // Log errors
+        connection.onerror = function (error) {
+            console.log('WebSocket Error ' + error);
+        };
+
+        var lastMessage = "";
+
+            // Log messages from the server
+        connection.onmessage = function (e) {
+            var data = JSON.parse(e.data);
+            console.log("Arrived data from server")
+            if(data.debug == "True"){
+                if(lastMessage!=data.div_debug){
+                    lastMessage = data.div_debug
+                    div_debug.innerHTML += data.div_debug + "\n"
+                    if(json.autoScroll == "1"){
+                        div_debug.scrollTop = div_debug.scrollHeight;
+                    }  
+                }
+                
+            }
+            try{
+                I0.innerHTML = data.I0
+                I1.innerHTML = data.I1
+                I2.innerHTML = data.I2
+                I3.innerHTML = data.I3
+                I4.innerHTML = data.I4
+                I5.innerHTML = data.I5
+
+                Q0.innerHTML = data.Q0
+                Q1.innerHTML = data.Q1
+                Q2.innerHTML = data.Q2
+                Q3.innerHTML = data.Q3
+                Q4.innerHTML = data.Q4
+                Q5.innerHTML = data.Q5  
+            }
+            catch{
+                console.log("error receiving I/O's information")
+            }
+            
+        }
+            
+        connection.onclose = function(){
+            console.log("socket disconected")
+        }
 
     </script>
 </body>
