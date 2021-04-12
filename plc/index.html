@@ -47,6 +47,7 @@
         <table style="width: 100%;">
             <thead style="background-color: #ffae00; color: white;">
                 <td style="padding: 1%;">Socket Programming</td>
+                <td style="padding: 1%;">Recive Message</td>
                 <td style="padding: 1%;">Send Message</td>
             </thead>
             <tbody> 
@@ -54,7 +55,10 @@
                     <textarea id="plc_socket_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
                 </td>
                 <td style="padding: 1%;">
-                    <input type="text" id="text_send_message" placeholder="Message over sockets">
+                    <textarea id="plc_socket_msg" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
+                </td>
+                <td style="padding: 1%;">
+                    <input type="text" id="text_send_message" placeholder="Send payload over sockets">
                     <button id="btn_send_message" class="btn btn-warning">Send message</button>
                 </td>
             </tbody> 
@@ -70,31 +74,31 @@
                     <textarea id="plc_interrupt_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
                 </td>
                 <td style="padding: 1%;">
-                    <label>I0:<div id="I0">I0</div></label>
+                    I0:<div id="I0">I0</div>
                     <br>
-                    <label>I1:<div id="I1">I1</div></label>
+                    I1:<div id="I1">I1</div>
                     <br>
-                    <label>I2:<div id="I2">I2</div></label>
+                    I2:<div id="I2">I2</div>
                     <br>
-                    <label>I3:<div id="I3">I3</div></label>
+                    I3:<div id="I3">I3</div>
                     <br>
-                    <label>I4:<div id="I4">I4</div></label>
+                    I4:<div id="I4">I4</div>
                     <br>
-                    <label>I5:<div id="I5">I5</div></label>
+                    I5:<div id="I5">I5</div>
                     <br>
                 </td style="padding: 1%;">
                 <td style="padding: 1%;">
-                    <label>Q0:<div id="Q0">Q0</div></label>
+                    Q0:<div id="Q0">Q0</div>
                     <br>
-                    <label>Q1:<div id="Q1">Q1</div></label>
+                    Q1:<div id="Q1">Q1</div>
                     <br>
-                    <label>Q2:<div id="Q2">Q2</div></label>
+                    Q2:<div id="Q2">Q2</div>
                     <br>
-                    <label>Q3:<div id="Q3">Q3</div></label>
+                    Q3:<div id="Q3">Q3</div>
                     <br>
-                    <label>Q4:<div id="Q4">Q4</div></label>
+                    Q4:<div id="Q4">Q4</div>
                     <br>
-                    <label>Q5:<div id="Q5">Q5</div></label>
+                    Q5:<div id="Q5">Q5</div>
                     <br>
                 </td>
             </tbody> 
@@ -105,6 +109,7 @@
         var plc_py = document.getElementById("plc_py")
         var plc_interrupt_py = document.getElementById("plc_interrupt_py")
         var plc_socket_py = document.getElementById("plc_socket_py")
+        var plc_socket_msg = document.getElementById("plc_socket_msg")
         var plc_py = document.getElementById("plc_py")
         var div_debug = document.getElementById("div_debug")
         var div_area = document.getElementById("div_area")
@@ -153,11 +158,12 @@
             json.save = "False"
             setTimeout(() => {
                location.reload(); 
-            }, 5000);
+            }, 8000);
         });
 
         btn_send_message.addEventListener("click", function(){
             connection.send(text_send_message.value)
+            plc_socket_msg.innerHTML += "Sended\n"
         });
 
         auto_scroll.addEventListener("change", function(){
@@ -175,11 +181,10 @@
             if (e.key == 'Tab') {
                 e.preventDefault();
                 var start = this.selectionStart;
-                var end = this.selectionEnd;
 
                 // set textarea value to: text before caret + tab + text after caret
                 this.value = this.value.substring(0, start) +
-                "\t" + this.value.substring(end);
+                "    ";
 
                 // put caret at right position again
                 this.selectionStart =
@@ -191,11 +196,10 @@
             if (e.key == 'Tab') {
                 e.preventDefault();
                 var start = this.selectionStart;
-                var end = this.selectionEnd;
 
                 // set textarea value to: text before caret + tab + text after caret
                 this.value = this.value.substring(0, start) +
-                "\t" + this.value.substring(end);
+                "    ";
 
                 // put caret at right position again
                 this.selectionStart =
@@ -207,11 +211,10 @@
             if (e.key == 'Tab') {
                 e.preventDefault();
                 var start = this.selectionStart;
-                var end = this.selectionEnd;
 
                 // set textarea value to: text before caret + tab + text after caret
                 this.value = this.value.substring(0, start) +
-                "\t" + this.value.substring(end);
+                "    ";
 
                 // put caret at right position again
                 this.selectionStart =
@@ -296,8 +299,14 @@
 
             // Log messages from the server
         connection.onmessage = function (e) {
+
             var data = JSON.parse(e.data);
+            console.log(data)
             console.log("Arrived data from server")
+            if(data.data != null && data.data != undefined && data.data != "" && data.data != "None"){
+                plc_socket_msg.innerHTML += data.data + "\n"
+                plc_socket_msg.scrollTop = plc_socket_msg.scrollHeight;
+            }
             if(data.debug == "True"){
                 if(lastMessage!=data.div_debug){
                     lastMessage = data.div_debug
@@ -309,19 +318,19 @@
                 
             }
             try{
-                I0.innerHTML = data.I0
-                I1.innerHTML = data.I1
-                I2.innerHTML = data.I2
-                I3.innerHTML = data.I3
-                I4.innerHTML = data.I4
-                I5.innerHTML = data.I5
+                if(data.I0 != undefined){I0.innerHTML = data.I0}
+                if(data.I1 != undefined){I1.innerHTML = data.I1}
+                if(data.I2 != undefined){I2.innerHTML = data.I2}
+                if(data.I3 != undefined){I3.innerHTML = data.I3}
+                if(data.I4 != undefined){I4.innerHTML = data.I4}
+                if(data.I5 != undefined){I5.innerHTML = data.I5}
 
-                Q0.innerHTML = data.Q0
-                Q1.innerHTML = data.Q1
-                Q2.innerHTML = data.Q2
-                Q3.innerHTML = data.Q3
-                Q4.innerHTML = data.Q4
-                Q5.innerHTML = data.Q5  
+                if(data.Q0 != undefined){Q0.innerHTML = data.Q0}
+                if(data.Q1 != undefined){Q1.innerHTML = data.Q1}
+                if(data.Q2 != undefined){Q2.innerHTML = data.Q2}
+                if(data.Q3 != undefined){Q3.innerHTML = data.Q3}
+                if(data.Q4 != undefined){Q4.innerHTML = data.Q4}
+                if(data.Q5 != undefined){Q5.innerHTML = data.Q5}
             }
             catch{
                 console.log("error receiving I/O's information")

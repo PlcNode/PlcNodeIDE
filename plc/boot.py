@@ -47,13 +47,6 @@ class plcClass:
     def wait(self,delay):
         currentTime = time.ticks_ms()
         while True:
-            payload = _plc.socketPayload
-            _plc.socketPayload = ""
-            try:
-                plcsocket.socket(_plc ,payload)
-            except:
-                self.console_log("Error in plc socket")
-
             if ((time.ticks_ms()-currentTime)>float(delay)):
                 break
 
@@ -274,8 +267,14 @@ def _acceptWebSocketCallback(webSocket, httpClient):
 	webSocket.ClosedCallback 	 = _closedCallback
 
 def _recvTextCallback(webSocket, msg):
-    _plc.socketPayload = msg
+    try:
+        _plc.socketPayload = plcsocket.socket(_plc, msg)
+        webSocket.SendText('{"data":"%s"}' % str(_plc.socketPayload))
+    except:
+        _plc.console_log("Error in plc Socket")
+
     _data = _plc.deserialize(str(msg))
+
     if(_data['save'] == "True"):
         _plc.plcJson['updateTime'] = _data['updateTime']
         _plc.plcJson['autoScroll'] = _data['autoScroll']
@@ -343,9 +342,6 @@ except:
 thisTime1 = time.ticks_ms()
 
 while True:
-    payload = _plc.socketPayload
-    _plc.socketPayload = ""
-    plcsocket.socket(_plc ,payload)
     if( time.ticks_ms() - thisTime1 > 1):
         thisTime1 = time.ticks_ms()
         try:

@@ -5,3 +5,4 @@ def socket(plc, payload):
         plc.wait(2000)
         plc.Q4(0)
         plc.wait(2000)
+        return "This is the mesagge sended to client"
