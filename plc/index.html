@@ -180,45 +180,42 @@
         plc_py.addEventListener('keydown', function(e) {
             if (e.key == 'Tab') {
                 e.preventDefault();
-                var start = this.selectionStart;
-
-                // set textarea value to: text before caret + tab + text after caret
-                this.value = this.value.substring(0, start) +
-                "    ";
-
-                // put caret at right position again
-                this.selectionStart =
-                this.selectionEnd = start + 1;
+                var character = "    "
+                var start = this.selectionStart
+                var content = this.value
+                var string0 = content.substring(0,this.selectionStart)
+                var string1 = content.substring(this.selectionStart, content.length)
+                var result = string0 + character + string1
+                this.value = result
+                this.selectionEnd = start + character.length;
             }
         });
 
         plc_interrupt_py.addEventListener('keydown', function(e) {
             if (e.key == 'Tab') {
                 e.preventDefault();
-                var start = this.selectionStart;
-
-                // set textarea value to: text before caret + tab + text after caret
-                this.value = this.value.substring(0, start) +
-                "    ";
-
-                // put caret at right position again
-                this.selectionStart =
-                this.selectionEnd = start + 1;
+                var character = "    "
+                var start = this.selectionStart
+                var content = this.value
+                var string0 = content.substring(0,this.selectionStart)
+                var string1 = content.substring(this.selectionStart, content.length)
+                var result = string0 + character + string1
+                this.value = result
+                this.selectionEnd = start + character.length;
             }
         });
 
         plc_socket_py.addEventListener('keydown', function(e) {
             if (e.key == 'Tab') {
                 e.preventDefault();
-                var start = this.selectionStart;
-
-                // set textarea value to: text before caret + tab + text after caret
-                this.value = this.value.substring(0, start) +
-                "    ";
-
-                // put caret at right position again
-                this.selectionStart =
-                this.selectionEnd = start + 1;
+                var character = "    "
+                var start = this.selectionStart
+                var content = this.value
+                var string0 = content.substring(0,this.selectionStart)
+                var string1 = content.substring(this.selectionStart, content.length)
+                var result = string0 + character + string1
+                this.value = result
+                this.selectionEnd = start + character.length;
             }
         });
 

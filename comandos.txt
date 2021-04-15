@@ -21,8 +21,8 @@ repl
 ///////////////////////////USAR CMD CLASICO////////////////////////////////////////
 
 
-esptool.py --chip esp32 --port COM6  erase_flash
-esptool.py --chip esp32 --port COM6 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
+esptool.exe --chip esp32 --port COM6  erase_flash
+esptool.exe --chip esp32 --port COM6 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
 rshell -p COM6
 cp plc/index.html /pyboard
 cp plc/manifest.json /pyboard

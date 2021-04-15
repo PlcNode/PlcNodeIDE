@@ -211,7 +211,7 @@ oled.show()
 
 #-------------------------------------------------------------------------------
 
-from microWebSrv import MicroWebSrv 
+from microWebSrv import MicroWebSrv
 
 @MicroWebSrv.route('/')
 def _httpHandlerTestGet(httpClient, httpResponse) :
@@ -242,13 +242,6 @@ def _httpHandlerTestGet(httpClient, httpResponse) :
 								  contentType	 = "text/html",
 								  contentCharset = "UTF-8",
 								  content 		 = open("plcsocket.py").read() )
-
-@MicroWebSrv.route('/div.html')
-def _httpHandlerTestGet(httpClient, httpResponse) :
-	httpResponse.WriteResponseOk( headers		 = None,
-								  contentType	 = "text/html",
-								  contentCharset = "UTF-8",
-								  content 		 = open("div.html").read() )
 
 @MicroWebSrv.route('/plc.json')
 def _httpHandlerTestGet(httpClient, httpResponse) :
