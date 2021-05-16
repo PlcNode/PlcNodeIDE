@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>PlcNode IDE</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,6 @@
     <meta name="description" content="Entorno de desarrollo PlcNode">
     <meta name="author" content="José Rosendo Soto Reza">
     <link rel="stylesheet" href="https://josereza.github.io/src/bootstrap.css">
-    <title>PlcNode IDE</title>
     <meta name="theme-color" content="#F0DB4F">
     <meta name="MobileOptimized" content="width">
     <meta name="HandheldFriendly" content="true">
@@ -21,323 +21,383 @@
     <link rel="manifest" href="./manifest.json">
 </head>
 <body style="background-color: #ffffffde;">
-    <div style="background-color: #000000de;" class="navbar">
-        <button id="btn_save" style="background-color: #00aeffde; border-radius: 0.25%;" class="btn btn-warning">save</button>
+
+    <div style="background-color: #000000de; padding: 1%; width: 100%;" id="navbar">
+        <button id="btn_save" style="background-color: #ffd900de; border-radius: 0.25%;" class="btn btn-warning btn-sm">Upload</button>
+        <button id="btn_restart" style="background-color: #0044ffde; border-radius: 0.25%;" class="btn btn-primary btn-sm">Restart</button>  
+        <button id="btn_reconnect" style="background-color: #00ff4cde; border-radius: 0.25%; color: white;" class="btn btn-success btn-sm">Reconnect</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="file" accept=".json" id="btn_open_project" style="background-color: #ffd900de; border-radius: 0.25%; color: white;" class="btn btn-warning btn-sm">
+        <button id="btn_download_project" style="background-color: #00b7ffde; border-radius: 0.25%; color: white;" class="btn btn-primary btn-sm">Download Project</button>
     </div>
-        <table style="width: 100%;">
-            <thead style="background-color:#00aeffde; color: white;">
-                <td style="padding: 1%;">Principal Programming</td>
-                <td style="padding: 1%;">Debugger</td>
-                <td style="padding: 1%;">Options</td>
-            </thead>   
-            <tbody>
-                <td style="padding: 1%;">
-                    <textarea id="plc_py" style="width: 100%; resize: none;" rows="18" spellcheck="false"> </textarea>
-                </td>
-                <td style="padding: 1%;">
-                    <textarea id="div_debug"  style="width: 100%; resize: none;" rows="18" spellcheck="false"></textarea>
-                </td>
-                <td>
-                    <input type="checkbox" id="auto_scroll" spellcheck="false"><label>Auto scroll</label>
-                    <br>
-                    <input type="number" id="update_time" max="30" min="0.2" step="0.1" value="1"> <label>Update Time</label>
-                </td>
-            </tbody> 
-        </table>
-        <table style="width: 100%;">
-            <thead style="background-color: #ffae00; color: white;">
-                <td style="padding: 1%;">Socket Programming</td>
-                <td style="padding: 1%;">Recive Message</td>
-                <td style="padding: 1%;">Send Message</td>
-            </thead>
-            <tbody> 
-                <td style="padding: 1%;">
-                    <textarea id="plc_socket_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
-                </td>
-                <td style="padding: 1%;">
-                    <textarea id="plc_socket_msg" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
-                </td>
-                <td style="padding: 1%;">
-                    <input type="text" id="text_send_message" placeholder="Send payload over sockets">
-                    <button id="btn_send_message" class="btn btn-warning">Send message</button>
-                </td>
-            </tbody> 
-         </table> 
-        <table style="width: 100%;">  
-            <thead style="background-color: #51c424; color: white;">
-                <td style="padding: 1%;">Interupts</td>
-                <td style="padding: 1%;">Inputs</td>
-                <td style="padding: 1%;">Outputs</td>
-            </thead>
-            <tbody> 
-                <td style="padding: 1%;">
-                    <textarea id="plc_interrupt_py" style="width: 100%;  resize: none;" rows="16" spellcheck="false"></textarea>
-                </td>
-                <td style="padding: 1%;">
-                    I0:<div id="I0">I0</div>
-                    <br>
-                    I1:<div id="I1">I1</div>
-                    <br>
-                    I2:<div id="I2">I2</div>
-                    <br>
-                    I3:<div id="I3">I3</div>
-                    <br>
-                    I4:<div id="I4">I4</div>
-                    <br>
-                    I5:<div id="I5">I5</div>
-                    <br>
-                </td style="padding: 1%;">
-                <td style="padding: 1%;">
-                    Q0:<div id="Q0">Q0</div>
-                    <br>
-                    Q1:<div id="Q1">Q1</div>
-                    <br>
-                    Q2:<div id="Q2">Q2</div>
-                    <br>
-                    Q3:<div id="Q3">Q3</div>
-                    <br>
-                    Q4:<div id="Q4">Q4</div>
-                    <br>
-                    Q5:<div id="Q5">Q5</div>
-                    <br>
-                </td>
-            </tbody> 
-         </table> 
+
+
+    <table style="width: 90%; padding: 4%; margin: 4%">
+        <tr style="background-color: #534c4c; text-align: right;">
+            <td>
+                <button id="btn_new_file" style="background-color: #00b7ffde; border-radius: 0.25%; color: white;" class="btn btn-primary btn-sm">New File</button>
+                <div id="div_new_file"></div>
+            </td>
+            <td>
+                
+                <button id="btn_delete_file" style="background-color: #ff0000de; border-radius: 0.25%;" class="btn btn-danger btn-sm">Delete this file</button>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 20%; margin: 1% ; background-color:  #000000de; color: white;">Files</td>
+            <td style="width: 70%; margin: 1%; background-color: #000000de; color: white;" id="div_current_file"></td>
+        </tr>
+        <tr>
+            <td style="width: 20%; margin: 1%; background-color: #534c4c; color: white;" id="div_files"></td>
+            <td style="width: 70%; margin: 1%;">
+                <textarea id="textarea_file_content" style="width: 100%;" rows="18" spellcheck="false"></textarea>
+            </td>
+        </tr> 
+    </table>
+    <table style="width: 90%; padding: 4%; margin: 4%;">
+        <tr>
+            <td style="width: 70%; margin: 1%; background-color: #000000de; color: white;">Debug</td>
+        </tr>
+        <tr>
+            <td style="width: 70%;" id="div_debug"><textarea id="textarea_debug"  rows="4" spellcheck="false" style="width: 100%;"></textarea></td>
+        </tr> 
+    </table>
     
     <script>
 
-        var plc_py = document.getElementById("plc_py")
-        var plc_interrupt_py = document.getElementById("plc_interrupt_py")
-        var plc_socket_py = document.getElementById("plc_socket_py")
-        var plc_socket_msg = document.getElementById("plc_socket_msg")
-        var plc_py = document.getElementById("plc_py")
-        var div_debug = document.getElementById("div_debug")
-        var div_area = document.getElementById("div_area")
+        var navbar = document.getElementById("navbar")
+        var btn_new_file = document.getElementById("btn_new_file")
+        var btn_delete_file = document.getElementById("btn_delete_file")
         var btn_save = document.getElementById("btn_save")
-        var div_area = document.getElementById("div_area")
-        var auto_scroll = document.getElementById("auto_scroll")
-        var update_time = document.getElementById("update_time")
-        var text_send_message = document.getElementById("text_send_message")
-        var btn_send_message = document.getElementById("btn_send_message")
+        var btn_restart = document.getElementById("btn_restart")
+        var btn_reconnect = document.getElementById("btn_reconnect")
+        var btn_download_project = document.getElementById("btn_download_project")
+        var btn_open_project = document.getElementById("btn_open_project")
+        var div_current_file = document.getElementById("div_current_file")
+        var div_files = document.getElementById("div_files")
+        var textarea_file_content = document.getElementById("textarea_file_content")
+        var textarea_debug = document.getElementById("textarea_debug")
 
-        var I0 = document.getElementById("I0")
-        var I1 = document.getElementById("I1")
-        var I2 = document.getElementById("I2")
-        var I3 = document.getElementById("I3")
-        var I4 = document.getElementById("I4")
-        var I5 = document.getElementById("I5")
-
-        var Q0 = document.getElementById("Q0")
-        var Q1 = document.getElementById("Q1")
-        var Q2 = document.getElementById("Q2")
-        var Q3 = document.getElementById("Q3")
-        var Q4 = document.getElementById("Q4")
-        var Q5 = document.getElementById("Q5")
-
-        var json = {
-            plc_py:"",
-            plc_interrupt_py:"",
-            plc_socket_py:"",
-            div_debug:"",
-            save: "",
-            update: "",
-            debug: "",
-            autoScroll: "0",
-            updateTime: "1"
+        var files = {
+            "main.py" : "#Here your code in python"
         }
+        var elements = {}
+        var currentFile = "main.py"
 
+        var banner = true
+
+        for(let i in files){
+            if(banner){
+                firstFile = i
+                banner = false
+            }
+            elements[i] = document.createElement("div")
+            elements[i].innerHTML = i
+
+            elements[i].addEventListener("mouseover", function(){
+                elements[i].style = "background-color: black;"
+            })
+            elements[i].addEventListener("mouseleave", function(){
+                elements[i].style = "background-color: #534c4c;"
+            })
+            elements[i].addEventListener("click", function(){
+                files[currentFile] = textarea_file_content.value
+                textarea_file_content.value = files[i]
+                currentFile = i
+                div_current_file.innerHTML = currentFile
+                })
+                div_files.appendChild(elements[i])
+            }
+            textarea_file_content.value = files[firstFile]
+            currentFile = firstFile
+            div_current_file.innerHTML = firstFile
+
+
+        btn_delete_file.addEventListener("click",function(){
+            let _confirm = confirm("Are you secure to delete this currentFile?")
+            if(currentFile != "main.py"){
+                if(_confirm){
+                div_files.removeChild(elements[currentFile])
+                    delete files[currentFile]
+                    delete elements[currentFile]   
+                    let firstFile
+                    let banner = true
+
+                    for(let i in files){
+                        if(banner){
+                            firstFile = i
+                            banner = false
+                        }
+                    }
+
+                    textarea_file_content.value = files[firstFile]
+                    div_current_file.innerHTML = firstFile
+
+                    fetch('http://' + location.hostname + '/actions/delete_file', 
+                    {
+                        method: 'post',
+                        body: JSON.stringify({delete_file:true, file:currentFile})
+                    })
+                    .then(res => res.text())
+                    .then(res => textarea_debug.value += res);
+                }
+            }
+        })
+
+        btn_new_file.addEventListener("click", function(){
+
+            var div_new_file = document.getElementById("div_new_file")
+
+            if(div_new_file.innerHTML == ""){ 
+                var txt_new_file = document.createElement("input")
+                var save_new_file = document.createElement("button")
+                var cancel_new_file = document.createElement("button")
+
+                txt_new_file.placeholder = "/Namefile"
+                save_new_file.innerHTML = "Create"
+                cancel_new_file.innerHTML = "Cancel"
+                div_new_file.appendChild(txt_new_file)
+                div_new_file.appendChild(save_new_file)
+                div_new_file.appendChild(cancel_new_file)
+                txt_new_file.focus()
+
+                cancel_new_file.addEventListener("click", function(){
+                    div_new_file.removeChild(txt_new_file)
+                    div_new_file.removeChild(save_new_file)
+                    div_new_file.removeChild(cancel_new_file)
+                })
+
+                save_new_file.addEventListener("click", function(){
+                    var fileName = txt_new_file.value
+                    var bandera = false
+
+                    for(let i in files){
+                        if(i == fileName){
+                            bandera = true
+                        }
+                    } 
+                    if(bandera == true){
+                        alert("That file already exists, please type another name file")
+                    }
+                    
+                    if(fileName != undefined && fileName != "" && fileName != "/" && fileName != "." && bandera == false){
+
+                        div_new_file.removeChild(txt_new_file)
+                        div_new_file.removeChild(save_new_file)
+                        div_new_file.removeChild(cancel_new_file)
+
+                        files[currentFile] = textarea_file_content.value //Save the last file
+
+                        console.log(files)
+
+                        files[fileName] = "#Here your code in python"
+                        div_current_file.innerHTML = fileName
+                        textarea_file_content.value = files[fileName]
+
+                        elements[fileName] = document.createElement("div")
+                        elements[fileName].innerHTML = fileName
+
+                        elements[fileName].addEventListener("mouseover", function(){
+                            elements[fileName].style = "background-color: black;"
+                        })
+                        elements[fileName].addEventListener("mouseleave", function(){
+                            elements[fileName].style = "background-color: #534c4c;"
+                        })
+                        elements[fileName].addEventListener("click", function(){
+                            textarea_file_content.value = files[fileName]
+                                currentFile = fileName
+                                div_current_file.innerHTML = currentFile
+                        })
+                        div_files.appendChild(elements[fileName])
+                        fetch('http://' + location.hostname + '/actions/save_files', 
+                        {
+                            method: 'post',
+                            body: JSON.stringify({save_files:true, files:files})
+                        })
+                        .then(res => res.text())
+                        .then(res => textarea_debug.value += res);
+                    }
+                })
+            }
+        })
 
         btn_save.addEventListener("click", function(){
-            json.plc_py = plc_py.value
-            json.plc_interrupt_py = plc_interrupt_py.value
-            json.plc_socket_py = plc_socket_py.value
-            json.updateTime = update_time.value
-            json.save = "True"
-            console.log(JSON.stringify(json))
-            connection.send(JSON.stringify(json))
-            json.save = "False"
-            setTimeout(() => {
-               location.reload(); 
-            }, 8000);
-        });
+            files[currentFile] = textarea_file_content.value
+            console.log(files)
+            fetch('http://' + location.hostname + '/actions/save_files', 
+            {
+                method: 'post',
+                body: JSON.stringify({save_files:true, files:files})
+            })
+            .then(res => res.text())
+            .then(res => textarea_debug.value += res);
+        })
 
-        btn_send_message.addEventListener("click", function(){
-            connection.send(text_send_message.value)
-            plc_socket_msg.innerHTML += "Sended\n"
-        });
+        btn_restart.addEventListener("click", function(){
+            fetch('http://' + location.hostname + '/actions/restart', 
+            {
+                method: 'post',
+                body: JSON.stringify({restart:true})
+            })
+            .then(res => res.text())
+            .then(res => textarea_debug.value += res);
+        })
 
-        auto_scroll.addEventListener("change", function(){
-            if(auto_scroll.checked == true){
-                json.autoScroll = "1"
-
-            }
-            if(auto_scroll.checked == false){
-                json.autoScroll = "0"
-            }
-        });
-
-
-        plc_py.addEventListener('keydown', function(e) {
-            if (e.key == 'Tab') {
-                e.preventDefault();
-                var character = "    "
-                var start = this.selectionStart
-                var content = this.value
-                var string0 = content.substring(0,this.selectionStart)
-                var string1 = content.substring(this.selectionStart, content.length)
-                var result = string0 + character + string1
-                this.value = result
-                this.selectionEnd = start + character.length;
-            }
-        });
-
-        plc_interrupt_py.addEventListener('keydown', function(e) {
-            if (e.key == 'Tab') {
-                e.preventDefault();
-                var character = "    "
-                var start = this.selectionStart
-                var content = this.value
-                var string0 = content.substring(0,this.selectionStart)
-                var string1 = content.substring(this.selectionStart, content.length)
-                var result = string0 + character + string1
-                this.value = result
-                this.selectionEnd = start + character.length;
-            }
-        });
-
-        plc_socket_py.addEventListener('keydown', function(e) {
-            if (e.key == 'Tab') {
-                e.preventDefault();
-                var character = "    "
-                var start = this.selectionStart
-                var content = this.value
-                var string0 = content.substring(0,this.selectionStart)
-                var string1 = content.substring(this.selectionStart, content.length)
-                var result = string0 + character + string1
-                this.value = result
-                this.selectionEnd = start + character.length;
-            }
-        });
-
-        fetch('http://'+location.hostname+'/plc.py')
-        .then(data => data.text())
-        .then(function(data){
-            console.log(data)
-            json.plc_py = data
-            plc_py.value = data
-        });
-
-        fetch('http://'+location.hostname+'/plcinterrupt.py')
-        .then(data => data.text())
-        .then(function(data){
-            console.log(data)
-            json.plc_interrupt_py = data
-            plc_interrupt_py.value = data
-        });
-
-        fetch('http://'+location.hostname+'/plcsocket.py')
-        .then(data => data.text())
-        .then(function(data){
-            console.log(data)
-            json.plc_socket_py = data
-            plc_socket_py.value = data
-        });
-
-
-        var interval;
-        var interval1;
-
-        interval1 = setInterval(function(){
+        btn_reconnect.addEventListener("click",function(){
+            connection.close()
             connection = new WebSocket('ws://'+location.hostname);
-        },5000);
+            connection.onopen = function () {
+                textarea_debug.value += "Connected\n"
+                textarea_debug.scrollTop = textarea_debug.scrollHeight
+            };
 
-        fetch('http://'+location.hostname+'/plc.json')
-        .then(data => data.json())
-        .then(function(data){
+            connection.onerror = function (error) {
+                textarea_debug.value += "Comunication error\n"
+                textarea_debug.scrollTop = textarea_debug.scrollHeight
+            };
 
-            console.log(data)
-            json.updateTime = data.updateTime
-            update_time.value = data.updateTime
-
-            if(data.autoScroll == "0"){
-                auto_scroll.checked = false
-                json.autoScroll = false
+            connection.onmessage = function (e) {
+                textarea_debug.value += e.data
+                textarea_debug.scrollTop = textarea_debug.scrollHeight
             }
-            if(data.autoScroll == "1"){
-                auto_scroll.checked = true
-                json.autoScroll = true
+                
+            connection.onclose = function(){
+                textarea_debug.value += "Disconnected\n"
+                textarea_debug.scrollTop = textarea_debug.scrollHeight
             }
+        })
 
-            interval = setInterval(function(){
-                json.debug = "True"
-                console.log("Sending message to server")
-                connection.send(JSON.stringify(json))
-                json.debug = "False"
-            }, ((Number(data.updateTime)*1000)));
+        btn_download_project.addEventListener("click", function(){
+            var element = document.createElement('a');
+            var program = {
+                files : files
+            }
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(program)));
+            element.setAttribute('download', "plcNodeProgram.json");
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        })
 
+        btn_open_project.addEventListener("change", function(e){
+                var file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+                var reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = function(e) {
+                    elements = {}
+                    files = {}
+                    div_files.innerHTML = ""
+                    var contents = JSON.parse(e.target.result);
+                    files = contents.files
+                    let firstFile
+                    let banner = true
+                    for(let i in files){
+                        if(banner){
+                            firstFile = i
+                            banner = false
+                        }
+                        elements[i] = document.createElement("div")
+                        elements[i].innerHTML = i
+
+                        elements[i].addEventListener("mouseover", function(){
+                            elements[i].style = "background-color: black;"
+                        })
+                        elements[i].addEventListener("mouseleave", function(){
+                            elements[i].style = "background-color: #534c4c;"
+                        })
+                        elements[i].addEventListener("click", function(){
+                            files[currentFile] = textarea_file_content.value
+                            textarea_file_content.value = files[i]
+                            currentFile = i
+                            div_current_file.innerHTML = currentFile
+                        })
+                        div_files.appendChild(elements[i])
+                    }
+                textarea_file_content.value = files[firstFile]
+                currentFile = firstFile
+                div_current_file.innerHTML = firstFile
+                }
+        }, false)
+
+        textarea_file_content.addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+                var character = "    "
+                var start = this.selectionStart
+                var content = this.value
+                var string0 = content.substring(0,this.selectionStart)
+                var string1 = content.substring(this.selectionStart, content.length)
+                var result = string0 + character + string1
+                this.value = result
+                this.selectionEnd = start + character.length;
+            }
         });
 
+        fetch('http://'+location.hostname+'/data/files')
+            .then(data => data.json())
+            .then(function(data){
+                files = data
+                let firstFile
+                let banner = true
+                div_files.innerHTML = ""
+                for(let i in files){
+                    if(banner){
+                        firstFile = i
+                        banner = false
+                    }
+                    elements[i] = document.createElement("div")
+                    elements[i].innerHTML = i
+
+                    elements[i].addEventListener("mouseover", function(){
+                        elements[i].style = "background-color: black;"
+                    })
+                    elements[i].addEventListener("mouseleave", function(){
+                        elements[i].style = "background-color: #534c4c;"
+                    })
+                    elements[i].addEventListener("click", function(){
+                        files[currentFile] = textarea_file_content.value
+                        textarea_file_content.value = files[i]
+                        currentFile = i
+                        div_current_file.innerHTML = currentFile
+                    })
+                    div_files.appendChild(elements[i])
+                }
+                textarea_file_content.value = files[firstFile]
+                currentFile = firstFile
+                div_current_file.innerHTML = firstFile
+        });
+        
 
         var connection;
 
-        connection = new WebSocket('ws://'+location.hostname);
+            connection = new WebSocket('ws://'+location.hostname);
+            connection.onopen = function () {
+                textarea_debug.value += "Connected\n"
+            };
 
-        connection.onopen = function () {
-            console.log(`Open conection websocket with ${location.hostname}`);
-            clearInterval(interval1);
-        };
+            connection.onerror = function (error) {
+                textarea_debug.value += "Comunication error\n"
+            };
 
-            // Log errors
-        connection.onerror = function (error) {
-            console.log('WebSocket Error ' + error);
-        };
-
-        var lastMessage = "";
-
-            // Log messages from the server
-        connection.onmessage = function (e) {
-
-            var data = JSON.parse(e.data);
-            console.log(data)
-            console.log("Arrived data from server")
-            if(data.data != null && data.data != undefined && data.data != "" && data.data != "None"){
-                plc_socket_msg.innerHTML += data.data + "\n"
-                plc_socket_msg.scrollTop = plc_socket_msg.scrollHeight;
+            connection.onmessage = function (e) {
+                textarea_debug.value += e.data
+                textarea_debug.scrollTop = textarea_debug.scrollHeight
             }
-            if(data.debug == "True"){
-                if(lastMessage!=data.div_debug){
-                    lastMessage = data.div_debug
-                    div_debug.innerHTML += data.div_debug + "\n"
-                    if(json.autoScroll == "1"){
-                        div_debug.scrollTop = div_debug.scrollHeight;
-                    }  
-                }
                 
+            connection.onclose = function(){
+                textarea_debug.value += "Disconnected\n"
             }
-            try{
-                if(data.I0 != undefined){I0.innerHTML = data.I0}
-                if(data.I1 != undefined){I1.innerHTML = data.I1}
-                if(data.I2 != undefined){I2.innerHTML = data.I2}
-                if(data.I3 != undefined){I3.innerHTML = data.I3}
-                if(data.I4 != undefined){I4.innerHTML = data.I4}
-                if(data.I5 != undefined){I5.innerHTML = data.I5}
 
-                if(data.Q0 != undefined){Q0.innerHTML = data.Q0}
-                if(data.Q1 != undefined){Q1.innerHTML = data.Q1}
-                if(data.Q2 != undefined){Q2.innerHTML = data.Q2}
-                if(data.Q3 != undefined){Q3.innerHTML = data.Q3}
-                if(data.Q4 != undefined){Q4.innerHTML = data.Q4}
-                if(data.Q5 != undefined){Q5.innerHTML = data.Q5}
-            }
-            catch{
-                console.log("error receiving I/O's information")
-            }
-            
-        }
-            
-        connection.onclose = function(){
-            console.log("socket disconected")
-        }
+            setTimeout(function(){
+                setInterval(function(){
+                    connection.send(JSON.stringify({debug:true}))
+                }, 500); 
+            }, 2000)
+
 
     </script>
 </body>

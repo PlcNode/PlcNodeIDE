@@ -30,8 +30,8 @@ cp plc/ssd1306.py /pyboard
 cp plc/microWebSocket.py /pyboard
 cp plc/microWebSrv.py /pyboard
 cp plc/plc.py /pyboard
-cp plc/plcsocket.py /pyboard
-cp plc/plcinterrupt.py /pyboard
+cp plc/main.py /pyboard
+cp plc/ejemplo.py /pyboard
 cp plc/plc.json /pyboard
 cp plc/boot.py /pyboard
 repl
