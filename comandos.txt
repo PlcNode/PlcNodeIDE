@@ -6,13 +6,13 @@ https://micropython.org/download/esp32/
 pip install Pyserial
 pip install rshell
 
-esptool.py --chip esp32 --port COM6  erase_flash
-esptool.py --chip esp32 --port COM6 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
+esptool.py --chip esp32 --port COM4  erase_flash
+esptool.py --chip esp32 --port COM4 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
 
 //////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////ACCEDER AL REPL DEL PLC//////////////////////
 
-rshell -p COM6
+rshell -p COM4
 
 repl
 
@@ -21,23 +21,25 @@ repl
 ///////////////////////////USAR CMD CLASICO////////////////////////////////////////
 
 
-esptool.exe --chip esp32 --port COM6  erase_flash
-esptool.exe --chip esp32 --port COM6 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
-rshell -p COM6
+.\esptool.exe --chip esp32 --port COM4  erase_flash
+.\esptool.exe --chip esp32 --port COM4 write_flash -z 0x1000 ./plc/interpreterv1.13.bin
+rshell -p COM4
 cp plc/index.html /pyboard
 cp plc/manifest.json /pyboard
 cp plc/ssd1306.py /pyboard
 cp plc/microWebSocket.py /pyboard
 cp plc/microWebSrv.py /pyboard
-cp plc/plc.py /pyboard
 cp plc/main.py /pyboard
 cp plc/ejemplo.py /pyboard
+cp plc/plc.py /pyboard
 cp plc/plc.json /pyboard
 cp plc/boot.py /pyboard
 repl
-import machine
-machine.reset()
+from machine import reset
+reset()
 
+
+cp plc/PP.py /pyboard
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////GITHUB///////////////////////////////////////////////

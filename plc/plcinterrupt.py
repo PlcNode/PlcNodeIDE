@@ -1,7 +1,7 @@
-
-def interrupts(plc):
+from plc import *
+def interrupts():
     def interruptI0():
-        plc.console_log("I0 Pressed one time")
+        console_log("I0 Pressed one time")
 
     def interruptI1():
         pass

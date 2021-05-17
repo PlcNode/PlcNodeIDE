@@ -1,10 +1,5 @@
 
 from machine import Pin
-from time import ticks_ms
-import ujson
-import uos
-import gc
-
 #------------------------------------------------------------------------------
 class Entrada:
     '''Clase para entradas'''
@@ -15,8 +10,6 @@ class Entrada:
             self.__I = Pin(pin, Pin.IN, Pin.PULL_UP)
         else:
             self.__I = Pin(pin, Pin.IN, Pin.PULL_DOWN)
-        self.__value = 0
-        self.mode = "NO"
         self.__preval = self.__I.value()
     
     def Res(self):
@@ -24,7 +17,7 @@ class Entrada:
         self.__preval = self.__value
         self.value = 0
 
-    def Leer(self, mode = 0):
+    def leer(self, mode = 0):
         '''Funcion que retorna el valor y detecta flancos'''
         #Rising
         if mode == "Rising" and self.__preval == 0 and self.__I.value() == 1:
@@ -39,12 +32,11 @@ class Entrada:
         elif mode == "NC":
             self.__value = not self.__I.value()
         else:
-            print("No definido")
+            print("error")
             self.__value = self.__I.value()
 
-    def Val(self, mode = "NO"):
+    def Val(self):
         '''Funcion que lee el estado de las entradas'''
-        self.mode = mode
         return self.__value
 
 
@@ -58,7 +50,6 @@ class Salida:
         elif value in ("False", "Off", 0):
             value = 0
         else: pass
-        self.__value = value
         #se crea el objeto
         self.__Q =  Pin(pin, Pin.OUT, value)
 
@@ -70,6 +61,7 @@ class Salida:
     def Out(self, state = "On"):
         '''Se almacena el estado deseado'''
         self.__value = state
+        print(self.__value)
     
     def Set(self):
         '''Se ejecuta el estado deseado'''
@@ -77,10 +69,10 @@ class Salida:
     
     def __Out(self):
         '''Cambiar salida'''
+        print(self.__value)
         #On
         if self.__value == "On":
-            if not self.__Q.value():
-                self.__Q.on()    
+            self.__Q.on()    
         #Off
         elif self.__value == "Off":
             self.__Q.off()
@@ -88,12 +80,11 @@ class Salida:
         elif self.__value == 'T':
             if self.__Q.value == 1:
                 self.__Q.off()
-            elif self.__Q.value == 0:
+            elif self.__Q == 0:
                 self.__Q.on()
         #Set
         elif self.__value == 'S':
-            if not __Q.value():
-                self.__Q.on()
+            self.__Q.on()
         #Reset
         elif self.__value == 'R' or not self.__value.is_integer() or self.__value < 0 or self.__value > 4096:
             self.__Q.off()
@@ -104,60 +95,6 @@ class Salida:
     def Value(self):
         '''Consulta de valor actual'''
         return self.__Q.value()
-
-
-plcJson = ujson.loads(open("plc.json").read())
-socketPayload = ""
-socketDebug = ""
-lastSocketDebug = ""
-        
-def freeMemory():
-    gc.collect()
-    F = gc.mem_free()
-    A = gc.mem_alloc()
-    T = F+A
-    P = '{0:.2f}%'.format(F/T*100)
-    return ('Total:{} Bytes,  Free:{} Bytes, ({})'.format(T,F,P))
-        
-def wait(delay):
-    currentTime = ticks_ms()
-    while True:
-        if ((ticks_ms()-currentTime)>float(delay)):
-            break
-
-def console_log(string):
-    socketDebug = str(string)
-
-def listDir():
-    listdir = []
-    for i in uos.listdir():
-        if not (i == "plc.py" or i == "manifest.json" or i == "plc.json" or i == "boot.py" or i == "microWebSrv.py" or i == "microWebSocket.py" or i == "ssd1306.py" or i == "index.html"):
-            listdir.append(i)
-    return listdir
-
-def getContentFiles():
-    content = {}
-    for i in listDir():
-        content[str(i)] = open('/'+i).read()
-    return serialize(content)
-
-def deserialize(data):
-    return ujson.loads(str(data))
-
-def serialize(data):
-    return ujson.dumps(data)
-
-def setWifiName(data):
-    plcJson['wifiName'] = str(data)
-
-def setWifiPassword(data):
-    plcJson['wifiPassword'] = str(data)
-        
-def getWifiName():
-    return plcJson['wifiName']
-
-def getWifiPassword():
-    return plcJson['wifiPassword']
 
 def Reset():
     I0.Res()
@@ -174,12 +111,12 @@ def Reset():
     Q5.Res()
 
 def Leer():
-    I0.Leer(I0.mode)
-    I1.Leer(I1.mode)
-    I2.Leer(I2.mode)
-    I3.Leer(I3.mode)
-    I4.Leer(I4.mode)
-    I5.Leer(I5.mode)
+    I0.leer()
+    I1.Leer()
+    I2.Leer()
+    I3.Leer()
+    I4.Leer()
+    I5.Leer()
 
 def Set():
     Q0.Set()

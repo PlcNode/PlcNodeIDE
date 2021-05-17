@@ -1,15 +1,15 @@
 
-import plc
-import main
+from plc import *
+from main import *
 import ssd1306
 import machine
-import time
+from time import sleep, ticks_ms
 import network
 
-plc = plc._plc()
+
 # ----------------------------------------------------------------------------
 
-print(plc.freeMemory())
+print(freeMemory())
 
 #-----------------------------------------------------------------------------------
 
@@ -23,12 +23,12 @@ for i in range(6):
     oled.text("V"+str(i), 56, 30)
     oled.show()
     oled.fill(0)
-    time.sleep(.5)
+    sleep(.5)
 
 #--------------------------------------------------------------------
 
-wifiName = plc.plcJson['wifiName']
-wifiPassword = plc.plcJson['wifiPassword']
+wifiName = plcJson['wifiName']
+wifiPassword = plcJson['wifiPassword']
 station = network.WLAN(network.STA_IF)
 station.active(True)
 station.connect(wifiName, wifiPassword)
@@ -44,7 +44,7 @@ while not(station.isconnected()):
     oled.show()
     pointers = pointers + "."
     count = count + 1
-    time.sleep(0.5)
+    sleep(0.5)
     if pointers == "...................":
         pointers = ""
     if count == 50:
@@ -89,7 +89,7 @@ def _httpHandlerTestGet(httpClient, httpResponse) :
     httpResponse.WriteResponseOk(headers=None, 
                                 contentType="text", 
                                 contentCharset="UTF-8", 
-                                content= plc.getContentFiles() )
+                                content= getContentFiles() )
 
 @MicroWebSrv.route("/actions/delete_file", "POST")
 def _httpHandlerTestPost(httpClient, httpResponse) :
@@ -109,9 +109,9 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
                                 contentCharset="UTF-8", 
                                 content= "Restarted\n")
     if _data['restart']==True:
-        timeNow = time.ticks_ms()
+        timeNow = ticks_ms()
         while True:
-            if (time.ticks_ms()-timeNow) > 1000:
+            if (ticks_ms()-timeNow) > 1000:
                 machine.reset()
     
 
@@ -138,11 +138,11 @@ def _acceptWebSocketCallback(webSocket, httpClient):
 	webSocket.ClosedCallback 	 = _closedCallback
 
 def _recvTextCallback(webSocket, msg):
-    _data = plc.deserialize(str(msg))
+    _data = deserialize(str(msg))
     if _data['debug'] == True:
-        if plc.lastSocketDebug != plc.socketDebug:
-            webSocket.SendText("%s\n" % plc.socketDebug)
-            plc.lastSocketDebug = plc.socketDebug
+        if lastSocketDebug != socketDebug:
+            webSocket.SendText("%s\n" % socketDebug)
+            lastSocketDebug = socketDebug
 
 def _recvBinaryCallback(webSocket, data):
 	print("WS RECV DATA : %s" % data)
@@ -160,21 +160,24 @@ srv.Start(True)
 # ----------------------------------------------------------------------------
 
 try:
-    main.setup(plc)
+    setup()
 except:
-    plc.console_log("Error in setup")
+    console_log("Error in setup")
+    print("error")
 
-thisTime1 = time.ticks_ms()
-
-
+thisTime1 = ticks_ms()
 
 while True:
-    if( time.ticks_ms() - thisTime1 > 1):
-        thisTime1 = time.ticks_ms()
+    if( ticks_ms() - thisTime1 > 1):
+        thisTime1 = ticks_ms()
         try:
-            main.loop(plc)
+            Reset()
+            Leer()
+            loop()
+            Set()
         except:
-            plc.console_log("Program error")
+            console_log("Program error")
+            print("error")
 
 #-----------------------------------------------------------------------------------
 
