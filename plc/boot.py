@@ -76,17 +76,17 @@ from microWebSrv import MicroWebSrv
 def _httpHandlerTestGet(httpClient, httpResponse) :
     httpResponse.WriteResponseFile("/index.html", 
                                 contentType="text/html", 
-                                headers=None)
+                                headers={'Access-Control-Allow-Origin': '*'})
 
 @MicroWebSrv.route("/manifest.json")
 def _httpHandlerTestGet(httpClient, httpResponse) :
     httpResponse.WriteResponseFile("/manifest.json", 
                                 contentType="text", 
-                                headers=None)
+                                headers={'Access-Control-Allow-Origin': '*'})
                     
 @MicroWebSrv.route("/data/files")
 def _httpHandlerTestGet(httpClient, httpResponse) :
-    httpResponse.WriteResponseOk(headers=None, 
+    httpResponse.WriteResponseOk(headers={'Access-Control-Allow-Origin': '*'}, 
                                 contentType="text", 
                                 contentCharset="UTF-8", 
                                 content= getContentFiles() )
@@ -96,7 +96,7 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
     _data = httpClient.ReadRequestContentAsJSON()
     if _data['delete_file']==True:
         uos.remove(_data['file'])
-        httpResponse.WriteResponseOk(headers=None, 
+        httpResponse.WriteResponseOk(headers={'Access-Control-Allow-Origin': '*'}, 
                                 contentType="text", 
                                 contentCharset="UTF-8", 
                                 content= "Deleted file:"+_data['file']+"\n")
@@ -104,7 +104,7 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
 @MicroWebSrv.route("/actions/restart", "POST")
 def _httpHandlerTestPost(httpClient, httpResponse) :
     _data = httpClient.ReadRequestContentAsJSON()
-    httpResponse.WriteResponseOk(headers=None, 
+    httpResponse.WriteResponseOk(headers={'Access-Control-Allow-Origin': '*'}, 
                                 contentType="text", 
                                 contentCharset="UTF-8", 
                                 content= "Restarted\n")
@@ -124,7 +124,7 @@ def _httpHandlerTestPost(httpClient, httpResponse) :
             file = open('/'+i, "w")
             file.write(_data['files'][i])
             file.close()
-        httpResponse.WriteResponseOk(headers=None, 
+        httpResponse.WriteResponseOk(headers={'Access-Control-Allow-Origin': '*'}, 
                                     contentType="text", 
                                     contentCharset="UTF-8", 
                                     content= "Saved\n")
